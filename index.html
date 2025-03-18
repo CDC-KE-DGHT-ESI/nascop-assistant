@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASCOP Kenya Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #031B4E;
+        }
+        p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the NASCOP Virtual Assistant Demo Instance !</h1>
+        <p>We are here to assist you with any questions or information you may need.</p>
+    </div>
+    
+    <script>
+        (function() {
+            // Obfuscated configuration - simple encoding to make it harder to read at a glance
+            const _0xa1b2 = {
+                _k1: "aHR0cHM6Ly9hZ2VudC1jYTRhZTU5MjI5ZTczNDU5MTk3NS15eHNhdS5vbmRpZ2l0YWxvY2Vhbi5hcHAvc3RhdGljL2NoYXRib3Qvd2lkZ2V0Lmpz",
+                _k2: "M2M3Y2E5MGItZjhlNS0xMWVmLWJmOGYtNGUwMTNlMmRkZGU0",
+                _k3: "V1B1bWg4ZF9aUHJaV1RTaUphUUdhNzNFc1J1VWdIMVg=",
+                _k4: "TkFTQ09QIFZpcnR1YWwgQXNzaXN0YW50",
+                _k5: "IzAzMUI0RQ==",
+                _k6: "I0U1RThFRA==",
+                _k7: "IzAwNjFFQg==",
+                _k8: "SGVsbG8hIEhvdyBjYW4gSSBoZWxwIHlvdSB0b2RheT8=",
+                _k9: "L3N0YXRpYy9jaGF0Ym90L2ljb25zL2RlZmF1bHQtYWdlbnQuc3Zn"
+            };
+
+            // Function to decode Base64
+            function decode(str) {
+                try {
+                    return atob(str);
+                } catch (e) {
+                    return str;
+                }
+            }
+
+            // Function to load the chatbot with some anti-inspection measures
+            function initializeChatbot() {
+                // Random delay to make it harder to track
+                setTimeout(() => {
+                    // Create a loader function that will run after another random delay
+                    const loadScript = () => {
+                        // Create script element
+                        const script = document.createElement('script');
+                        script.async = true;
+                        script.src = decode(_0xa1b2._k1);
+                        
+                        // Set data attributes with decoded values
+                        const dataAttrs = {
+                            'data-agent-id': decode(_0xa1b2._k2),
+                            'data-chatbot-id': decode(_0xa1b2._k3),
+                            'data-name': decode(_0xa1b2._k4),
+                            'data-primary-color': decode(_0xa1b2._k5),
+                            'data-secondary-color': decode(_0xa1b2._k6),
+                            'data-button-background-color': decode(_0xa1b2._k7),
+                            'data-starting-message': decode(_0xa1b2._k8),
+                            'data-logo': decode(_0xa1b2._k9)
+                        };
+                        
+                        // Set the attributes in a way that's harder to track
+                        Object.keys(dataAttrs).forEach(key => {
+                            // Small delay between setting each attribute
+                            setTimeout(() => {
+                                script.setAttribute(key, dataAttrs[key]);
+                            }, Math.random() * 50);
+                        });
+                        
+                        // Append to body after a slight delay
+                        setTimeout(() => {
+                            document.body.appendChild(script);
+                        }, Math.random() * 100 + 50);
+                    };
+                    
+                    // Execute the loader with a random delay
+                    setTimeout(loadScript, Math.random() * 300 + 100);
+                    
+                }, Math.random() * 500 + 500);
+            }
+            
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeChatbot);
+            } else {
+                initializeChatbot();
+            }
+            
+            // Anti-debug measures
+            // This makes it harder to use browser devtools to inspect
+            const antiDebug = () => {
+                // Check if devtools might be open
+                const checkDevTools = () => {
+                    const widthThreshold = window.outerWidth - window.innerWidth > 160;
+                    const heightThreshold = window.outerHeight - window.innerHeight > 160;
+                    if (widthThreshold || heightThreshold) {
+                        // If devtools is likely open, obfuscate the script data
+                        const scripts = document.querySelectorAll('script');
+                        scripts.forEach(script => {
+                            if (script.getAttribute('data-chatbot-id')) {
+                                // Temporarily remove sensitive attributes
+                                const tempData = {};
+                                ['data-agent-id', 'data-chatbot-id'].forEach(attr => {
+                                    tempData[attr] = script.getAttribute(attr);
+                                    script.removeAttribute(attr);
+                                });
+                                
+                                // Restore after a delay
+                                setTimeout(() => {
+                                    Object.keys(tempData).forEach(key => {
+                                        script.setAttribute(key, tempData[key]);
+                                    });
+                                }, 5000);
+                            }
+                        });
+                    }
+                };
+                
+                // Check periodically
+                setInterval(checkDevTools, 1000);
+                
+                // Additional anti-debugging techniques
+                window.addEventListener('resize', checkDevTools);
+                window.addEventListener('devtoolschange', checkDevTools);
+            };
+            
+            // Initialize anti-debug measures
+            antiDebug();
+        })();
+    </script>
+</body>
+</html>
