@@ -28,6 +28,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update examples visibility based on initial conversation
     updateExamplesVisibility();
     
+    // Animate the typing indicator ellipsis
+    function animateEllipsis() {
+        const typingIndicator = document.getElementById('typing-indicator');
+        let dotCount = 0;
+        let baseText = "Thinking";
+        
+        // Clear any existing interval
+        if (window.ellipsisInterval) {
+            clearInterval(window.ellipsisInterval);
+        }
+        
+        // Create new interval for animation
+        window.ellipsisInterval = setInterval(() => {
+            let dots = ".".repeat(dotCount + 1);
+            typingIndicator.textContent = baseText + dots;
+            dotCount = (dotCount + 1) % 3; // Cycle through 1, 2, 3 dots
+        }, 400); // Change dots every 400ms
+    }
+    
     // Format time
     function formatTime(date) {
         return new Intl.DateTimeFormat('en-US', {
@@ -347,6 +366,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Send message to the API
     async function sendMessageToAPI(message) {
         typingIndicator.style.display = 'block';
+        animateEllipsis(); // Start the animation
         
         try {
             // Prepare API request with conversation history
@@ -377,6 +397,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             typingIndicator.style.display = 'none';
             
+            // Stop the animation when we get the response
+            if (window.ellipsisInterval) {
+                clearInterval(window.ellipsisInterval);
+            }
+            
             // Process the response
             if (data && data.choices && data.choices.length > 0 && data.choices[0].message) {
                 const botResponse = data.choices[0].message.content;
@@ -393,6 +418,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('Error:', error);
             typingIndicator.style.display = 'none';
+            
+            // Stop the animation if there's an error
+            if (window.ellipsisInterval) {
+                clearInterval(window.ellipsisInterval);
+            }
+            
             const errorMsg = `Sorry, there was an error: ${error.message}`;
             const timestamp = Date.now();
             addMessage(errorMsg, false, timestamp);
