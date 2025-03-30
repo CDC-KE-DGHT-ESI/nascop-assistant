@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASCOP Chat</title>
+    <title>NASCOP Virtual Assistant - Demo Instance</title>
     <style>
         :root {
             --primary-color: #4285F4;
@@ -342,7 +342,7 @@
                 <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
         </button>
-        <h1>NASCOP Guidelines Chat</h1>
+        <h1>NASCOP Virtual Assistant - Demo Instance</h1>
     </div>
     
     <div class="app-container">
@@ -364,7 +364,7 @@
         <div class="chat-container">
             <div class="chat-messages" id="chat-messages">
                 <div class="message bot-message">
-                    <div>Hello! I can help answer questions about NASCOP guidelines and HIV treatment protocols. What would you like to know?</div>
+                    <div>Hello! I'm the NASCOP Virtual Assistant. I can help answer questions about NASCOP guidelines and HIV treatment protocols. What would you like to know?</div>
                     <div class="message-time" id="initial-time"></div>
                 </div>
             </div>
@@ -418,6 +418,9 @@
             // Initialize conversations from localStorage if available
             loadConversations();
             
+            // Update examples visibility based on initial conversation
+            updateExamplesVisibility();
+            
             // Format time
             function formatTime(date) {
                 return new Intl.DateTimeFormat('en-US', {
@@ -450,6 +453,14 @@
                         const mostRecentId = conversationIds.sort((a, b) => {
                             return conversations[b].lastUpdated - conversations[a].lastUpdated;
                         })[0];
+                        
+                        // For backwards compatibility - ensure hideExamples property exists
+                        conversationIds.forEach(id => {
+                            if (conversations[id].hideExamples === undefined) {
+                                conversations[id].hideExamples = false;
+                            }
+                        });
+                        
                         setActiveConversation(mostRecentId);
                     }
                 }
@@ -476,7 +487,8 @@
                         }
                     ],
                     created: now,
-                    lastUpdated: now
+                    lastUpdated: now,
+                    hideExamples: true // Flag to keep examples hidden throughout this conversation
                 };
                 
                 saveConversations();
@@ -486,10 +498,13 @@
                 // Clear chat messages and add initial message
                 chatMessages.innerHTML = '';
                 addMessage(
-                    "Hello! I can help answer questions about NASCOP guidelines and HIV treatment protocols. What would you like to know?",
+                    "Hello! I'm the NASCOP Virtual Assistant. I can help answer questions about NASCOP guidelines and HIV treatment protocols. What would you like to know?",
                     false,
                     now
                 );
+                
+                // Hide example buttons for new conversations
+                updateExamplesVisibility();
             }
             
             // Update the conversation list in sidebar
@@ -545,9 +560,24 @@
                     addMessage(msg.content, msg.role === 'user', msg.time);
                 });
                 
+                // Update examples visibility based on conversation status
+                updateExamplesVisibility();
+                
                 // On mobile, close the sidebar after selection
                 if (window.innerWidth <= 768) {
                     sidebar.classList.remove('open');
+                }
+            }
+            
+            // Update visibility of example buttons based on conversation state
+            function updateExamplesVisibility() {
+                const examplesContainer = document.querySelector('.examples');
+                
+                // If this conversation was started as "New Chat", keep examples hidden
+                if (conversations[activeConversationId].hideExamples) {
+                    examplesContainer.style.display = 'none';
+                } else {
+                    examplesContainer.style.display = 'flex';
                 }
             }
             
