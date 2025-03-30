@@ -54,6 +54,7 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
 }
 
 .header h1 {
@@ -204,6 +205,7 @@ body {
     line-height: 1.5;
     position: relative;
     font-size: 15px;
+    padding-right: 30px; /* Extra space for the play button */
 }
 
 .message-time {
@@ -339,6 +341,60 @@ body {
     opacity: 0.8;
 }
 
+/* Speech toggle button in header */
+.speech-toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 15px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.speech-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    opacity: 1;
+}
+
+.speech-toggle-btn.active {
+    background-color: rgba(255, 255, 255, 0.25);
+    opacity: 1;
+}
+
+/* Play button for individual messages */
+.play-speech-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.play-speech-btn:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--primary-color);
+    opacity: 1;
+}
+
 /* Mobile responsiveness */
 .menu-toggle {
     display: none;
@@ -375,5 +431,9 @@ body {
     
     .header h1 {
         margin: 0 auto;
+    }
+    
+    .speech-toggle-btn {
+        right: 15px;
     }
 }

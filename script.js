@@ -11,6 +11,86 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearHistoryBtn = document.getElementById('clear-history-btn');
     const initialTimeElement = document.getElementById('initial-time');
     
+    // Set distinctive page title with emoji for tab identification
+    document.title = "🔴 NASCOP Assistant";
+    
+    // Text-to-Speech functionality
+    let speechSynthesis = window.speechSynthesis;
+    let isSpeechEnabled = false;
+    let currentUtterance = null;
+    
+    // Function to initialize text-to-speech
+    function initTextToSpeech() {
+        // Check if browser supports speech synthesis
+        if (!('speechSynthesis' in window)) {
+            console.error('Your browser does not support speech synthesis');
+            return false;
+        }
+        return true;
+    }
+    
+    // Function to toggle speech functionality
+    function toggleSpeech() {
+        isSpeechEnabled = !isSpeechEnabled;
+        
+        // Update button appearance
+        const speechToggleBtn = document.getElementById('speech-toggle-btn');
+        if (isSpeechEnabled) {
+            speechToggleBtn.classList.add('active');
+            speechToggleBtn.setAttribute('title', 'Turn off voice');
+        } else {
+            speechToggleBtn.classList.remove('active');
+            speechToggleBtn.setAttribute('title', 'Turn on voice');
+            // Stop any ongoing speech
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+        }
+        
+        // Save preference to localStorage
+        localStorage.setItem('nascop_speech_enabled', isSpeechEnabled);
+    }
+    
+    // Function to speak text
+    function speakText(text) {
+        if (!isSpeechEnabled || !initTextToSpeech()) return;
+        
+        // First, cancel any ongoing speech
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        
+        // Clean the text - remove HTML tags and normalize spaces
+        const cleanText = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        
+        // Create speech utterance
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        
+        // Set properties
+        utterance.lang = 'en-US';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        // Store current utterance for potential cancellation
+        currentUtterance = utterance;
+        
+        // Speak
+        speechSynthesis.speak(utterance);
+        
+        // Add event listener for when speech ends
+        utterance.onend = function() {
+            currentUtterance = null;
+        };
+    }
+    
+    // Function to stop speech
+    function stopSpeech() {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+    }
+    
     // Set initial message time
     initialTimeElement.textContent = formatTime(new Date());
     
@@ -217,6 +297,9 @@ document.addEventListener('DOMContentLoaded', function() {
         activeConversationId = conversationId;
         updateConversationList();
         
+        // Stop any ongoing speech when switching conversations
+        stopSpeech();
+        
         // Load conversation messages
         chatMessages.innerHTML = '';
         conversations[conversationId].messages.forEach(msg => {
@@ -280,6 +363,26 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Format markdown-style text
             contentElement.innerHTML = formatMarkdown(message);
+            
+            // Add play button for bot messages
+            const playButton = document.createElement('button');
+            playButton.classList.add('play-speech-btn');
+            playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>';
+            playButton.title = "Read aloud";
+            
+            playButton.addEventListener('click', () => {
+                speakText(message);
+            });
+            
+            messageElement.appendChild(playButton);
+            
+            // If speech is enabled, automatically speak bot messages
+            if (isSpeechEnabled) {
+                // Slight delay to ensure DOM is updated
+                setTimeout(() => {
+                    speakText(message);
+                }, 100);
+            }
         }
         
         const timeElement = document.createElement('div');
@@ -339,6 +442,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Typing complete, ensure the full formatted message is set
                 contentElement.innerHTML = formattedMessage;
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Add play button now that typing is complete
+                const playButton = document.createElement('button');
+                playButton.classList.add('play-speech-btn');
+                playButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>';
+                playButton.title = "Read aloud";
+                
+                playButton.addEventListener('click', () => {
+                    speakText(message);
+                });
+                
+                messageElement.appendChild(playButton);
+                
+                // If speech is enabled, automatically speak when typing is complete
+                if (isSpeechEnabled) {
+                    speakText(message);
+                }
             }
         }
         
@@ -462,7 +582,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // New chat button
-    newChatBtn.addEventListener('click', createNewConversation);
+    newChatBtn.addEventListener('click', function() {
+        stopSpeech(); // Stop any ongoing speech
+        createNewConversation();
+    });
     
     // Clear history button
     clearHistoryBtn.addEventListener('click', clearAllConversations);
@@ -481,4 +604,34 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar.classList.remove('open');
         }
     });
+    
+    // Create and append speech toggle button to the header
+    const header = document.querySelector('.header');
+    const speechToggleBtn = document.createElement('button');
+    speechToggleBtn.id = 'speech-toggle-btn';
+    speechToggleBtn.classList.add('speech-toggle-btn');
+    speechToggleBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>';
+    speechToggleBtn.title = "Turn on voice";
+    header.appendChild(speechToggleBtn);
+    
+    // Initialize speech setting from localStorage
+    const savedSpeechSetting = localStorage.getItem('nascop_speech_enabled');
+    if (savedSpeechSetting === 'true') {
+        isSpeechEnabled = true;
+        speechToggleBtn.classList.add('active');
+        speechToggleBtn.title = "Turn off voice";
+    }
+    
+    // Add event listener to speech toggle button
+    speechToggleBtn.addEventListener('click', toggleSpeech);
+    
+    // Add event listeners to conversation items to stop speech when switching
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.conversation-item')) {
+            stopSpeech();
+        }
+    });
+    
+    // Initialize text-to-speech
+    initTextToSpeech();
 });
