@@ -60,8 +60,19 @@ document.addEventListener('DOMContentLoaded', function() {
             speechSynthesis.cancel();
         }
         
-        // Clean the text - remove HTML tags and normalize spaces
-        const cleanText = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        // Clean the text more thoroughly for speech synthesis
+        // First, handle specific markdown patterns before removing HTML tags
+        let cleanText = text
+            // Replace raw markdown patterns before HTML cleaning
+            .replace(/\*\*/g, '') // Remove all ** for bold
+            .replace(/\n\s*\*\s+/g, ', ') // Convert asterisk bullet points to natural pauses
+            .replace(/\n\s*\+\s+/g, ', ') // Convert plus bullet points to natural pauses
+            .replace(/\n\s*\d+\.\s+/g, ', number ') // Convert numbered lists to natural speech
+            // Now remove HTML tags that may have been applied by formatMarkdown
+            .replace(/<[^>]*>/g, ' ')
+            // Normalize whitespace
+            .replace(/\s+/g, ' ')
+            .trim();
         
         // Create speech utterance
         const utterance = new SpeechSynthesisUtterance(cleanText);
@@ -473,8 +484,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/(\d+)\.\s+\*\*([^*]+)\*\*:/g, '<strong>$1. $2:</strong>')
             // Bold text
             .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-            // Bullet points
+            // Bullet points with asterisks
             .replace(/\n\s*\*\s+([^\n]+)/g, '\n<li>$1</li>')
+            // Bullet points with plus signs
+            .replace(/\n\s*\+\s+([^\n]+)/g, '\n<li>$1</li>')
             // Wrap bullet points in ul tags
             .replace(/(<li>.*?<\/li>(\s*<li>.*?<\/li>)*)/gs, '<ul>$1</ul>')
             // Paragraph breaks
