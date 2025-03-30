@@ -372,8 +372,6 @@
             
             <div class="examples">
                 <button class="example-button">Explain the three-test algorithm</button>
-                <button class="example-button">What are the current first-line ART regimens for adults?</button>
-                <button class="example-button">What are the guidelines for PrEP?</button>
                 <button class="example-button">What is the standard package of care for PLHIV</button>
             </div>
             
@@ -488,7 +486,7 @@
                     ],
                     created: now,
                     lastUpdated: now,
-                    hideExamples: true // Flag to keep examples hidden throughout this conversation
+                    hideExamples: false // Flag to keep examples hidden throughout this conversation
                 };
                 
                 saveConversations();
@@ -503,8 +501,12 @@
                     now
                 );
                 
-                // Hide example buttons for new conversations
-                updateExamplesVisibility();
+                // Add this to handleSendMessage function (after adding message to conversation):
+// Hide examples after user sends their first message
+                if (conversations[activeConversationId].messages.filter(msg => msg.role === "user").length === 1) {
+                    conversations[activeConversationId].hideExamples = true;
+                    updateExamplesVisibility();
+                }
             }
             
             // Update the conversation list in sidebar
