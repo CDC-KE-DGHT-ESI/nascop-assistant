@@ -76,6 +76,51 @@ body {
     align-items: center;
 }
 
+.clear-history-btn {
+    background: none;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.clear-history-btn:hover {
+    background-color: #f0f0f0;
+    color: #d63031;
+}
+
+.delete-btn {
+    display: none;
+    position: absolute;
+    right: 8px;
+    top: 10px;
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    opacity: 0.7;
+}
+
+.conversation-item {
+    position: relative;
+}
+
+.conversation-item:hover .delete-btn {
+    display: block;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+    color: #d63031;
+}
+
 .conversation-list {
     flex: 1;
     overflow-y: auto;

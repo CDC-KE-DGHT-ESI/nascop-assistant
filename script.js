@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const conversationList = document.getElementById('conversation-list');
     const newChatBtn = document.getElementById('new-chat-btn');
+    const clearHistoryBtn = document.getElementById('clear-history-btn');
     const initialTimeElement = document.getElementById('initial-time');
     
     // Set initial message time
@@ -138,15 +139,56 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            item.textContent = title;
+            const titleSpan = document.createElement('span');
+            titleSpan.textContent = title;
+            item.appendChild(titleSpan);
+            
+            // Add delete button for individual conversation
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            deleteBtn.title = "Delete this conversation";
+            
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent triggering the parent click
+                deleteConversation(conv.id);
+            });
+            
+            item.appendChild(deleteBtn);
             item.dataset.id = conv.id;
             
-            item.addEventListener('click', () => {
-                setActiveConversation(conv.id);
+            item.addEventListener('click', (e) => {
+                if (e.target !== deleteBtn && !deleteBtn.contains(e.target)) {
+                    setActiveConversation(conv.id);
+                }
             });
             
             conversationList.appendChild(item);
         });
+    }
+    
+    // Delete a specific conversation
+    function deleteConversation(conversationId) {
+        if (confirm("Are you sure you want to delete this conversation?")) {
+            delete conversations[conversationId];
+            saveConversations();
+            
+            // If we deleted the active conversation, create a new one
+            if (conversationId === activeConversationId) {
+                createNewConversation();
+            } else {
+                updateConversationList();
+            }
+        }
+    }
+    
+    // Clear all conversation history
+    function clearAllConversations() {
+        if (confirm("Are you sure you want to clear all conversation history? This action cannot be undone.")) {
+            conversations = {};
+            saveConversations();
+            createNewConversation();
+        }
     }
     
     // Set the active conversation and load its messages
@@ -390,6 +432,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // New chat button
     newChatBtn.addEventListener('click', createNewConversation);
+    
+    // Clear history button
+    clearHistoryBtn.addEventListener('click', clearAllConversations);
     
     // Mobile menu toggle
     menuToggle.addEventListener('click', function() {
