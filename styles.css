@@ -8,9 +8,14 @@
     --bot-msg-bg: #f0f4f8;
     --user-msg-text: #0d2436;
     --bot-msg-text: #0d2436;
-    --sidebar-bg: #ffffff;
-    --sidebar-active: #e8f0fe;
+    
+    /* New sidebar styling */
+    --sidebar-bg: #f0f7ff;  /* Light blue background */
+    --sidebar-header-bg: #e1edff;  /* Slightly darker blue for header */
+    --sidebar-active: #d4e4ff;
     --sidebar-active-border: #4285F4;
+    --sidebar-hover: #e8f0fe;
+    
     --header-bg: linear-gradient(135deg, #4285F4, #34a853);
     --sidebar-width: 250px;
     --header-height: 60px;
@@ -64,16 +69,18 @@ body {
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.03);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
 }
 
 .sidebar-header {
-    padding: 15px;
+    padding: 18px 15px;
     font-weight: 600;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--sidebar-header-bg);
+    color: #2c3e50;
 }
 
 .clear-history-btn {
@@ -110,6 +117,16 @@ body {
 
 .conversation-item {
     position: relative;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-left: 3px solid transparent;
 }
 
 .conversation-item:hover .delete-btn {
@@ -124,28 +141,19 @@ body {
 .conversation-list {
     flex: 1;
     overflow-y: auto;
-    padding: 10px;
-}
-
-.conversation-item {
-    padding: 12px 15px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 15px;
 }
 
 .conversation-item:hover {
-    background-color: #f0f0f0;
+    background-color: var(--sidebar-hover);
+    transform: translateX(2px);
 }
 
 .conversation-item.active {
     background-color: var(--sidebar-active);
     border-left: 3px solid var(--sidebar-active-border);
     font-weight: 500;
+    box-shadow: 0 2px 5px rgba(66, 133, 244, 0.15);
 }
 
 .new-chat-btn {
