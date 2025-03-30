@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASCOP Virtual Assistant</title>
+    <title>NASCOP Virtual Assistant - Demo Instance</title>
     <style>
         :root {
             --primary-color: #4285F4;
@@ -45,6 +45,7 @@
             flex: 1;
             height: calc(100vh - var(--header-height));
             overflow: hidden;
+            position: relative;
         }
         
         .header {
@@ -139,6 +140,9 @@
             display: flex;
             flex-direction: column;
             background-color: var(--chat-bg);
+            height: 100%;
+            max-height: 100%;
+            position: relative;
         }
         
         .chat-messages {
@@ -148,6 +152,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            margin-bottom: auto;
         }
         
         .message {
@@ -193,6 +198,11 @@
         .chat-input-container {
             padding: 15px 20px;
             border-top: 1px solid var(--border-color);
+            position: sticky;
+            bottom: 0;
+            background-color: var(--chat-bg);
+            width: 100%;
+            z-index: 5;
         }
         
         .chat-input {
@@ -248,6 +258,10 @@
             flex-wrap: wrap;
             gap: 10px;
             border-top: 1px solid var(--border-color);
+            position: sticky;
+            bottom: 0;
+            background-color: var(--chat-bg);
+            z-index: 4;
         }
         
         .example-button {
@@ -312,6 +326,9 @@
             
             .app-container {
                 position: relative;
+                height: calc(100vh - var(--header-height));
+                display: flex;
+                flex-direction: column;
             }
             
             .sidebar {
@@ -329,6 +346,48 @@
             
             .header h1 {
                 margin: 0 auto;
+                font-size: 1.2rem;
+            }
+            
+            .chat-container {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                max-height: 100vh;
+                overflow: hidden;
+            }
+            
+            .chat-messages {
+                flex: 1;
+                overflow-y: auto;
+                padding-bottom: 150px; /* Ensure space for input and examples */
+            }
+            
+            .chat-input-container {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: var(--chat-bg);
+                padding: 10px 15px;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            .examples {
+                position: fixed;
+                bottom: 70px; /* Height of chat input plus padding */
+                left: 0;
+                right: 0;
+                z-index: 4;
+                padding: 10px 15px;
+                box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            }
+            
+            body {
+                height: 100%;
+                position: fixed;
+                width: 100%;
+                overflow: hidden;
             }
         }
     </style>
@@ -342,7 +401,7 @@
                 <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
         </button>
-        <h1>NASCOP Virtual Assistant</h1>
+        <h1>NASCOP Virtual Assistant - Demo Instance</h1>
     </div>
     
     <div class="app-container">
@@ -368,7 +427,7 @@
                     <div class="message-time" id="initial-time"></div>
                 </div>
             </div>
-            <div class="typing-indicator" id="typing-indicator">Thinking...</div>
+            <div class="typing-indicator" id="typing-indicator">Agent is thinking...</div>
             
             <div class="examples">
                 <button class="example-button">Explain the three-test algorithm</button>
@@ -786,6 +845,16 @@
             menuToggle.addEventListener('click', function() {
                 sidebar.classList.toggle('open');
             });
+            
+            // Fix viewport issues for mobile
+            function setMobileViewportHeight() {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            
+            // Set the height initially and on resize
+            setMobileViewportHeight();
+            window.addEventListener('resize', setMobileViewportHeight);
             
             // Close sidebar when clicking outside on mobile
             document.addEventListener('click', function(event) {
