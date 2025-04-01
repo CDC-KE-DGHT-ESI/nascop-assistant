@@ -437,3 +437,14 @@ body {
         right: 15px;
     }
 }
+
+.bot-message ul, .bot-message ol {
+    margin-left: 20px;
+    padding-left: 0;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.bot-message li {
+    margin-bottom: 4px;
+}

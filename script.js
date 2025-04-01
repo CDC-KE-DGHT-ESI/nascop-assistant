@@ -485,15 +485,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // Bold text
             .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
             // Bullet points with asterisks
-            .replace(/\n\s*\*\s+([^\n]+)/g, '\n<li>$1</li>')
+            .replace(/\n\s*\*\s+([^\n]+)/g, '<li>$1</li>')
             // Bullet points with plus signs
-            .replace(/\n\s*\+\s+([^\n]+)/g, '\n<li>$1</li>')
+            .replace(/\n\s*\+\s+([^\n]+)/g, '<li>$1</li>')
             // Wrap bullet points in ul tags
             .replace(/(<li>.*?<\/li>(\s*<li>.*?<\/li>)*)/gs, '<ul>$1</ul>')
             // Paragraph breaks
             .replace(/\n\n/g, '<br><br>')
-            // Single line breaks
-            .replace(/\n/g, '<br>');
+            // Single line breaks (excluding list items)
+            .replace(/\n(?!<li>)/g, '<br>');
     }
     
     // Send message to the API
