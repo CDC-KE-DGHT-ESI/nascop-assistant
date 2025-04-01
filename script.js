@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const initialTimeElement = document.getElementById('initial-time');
     
     // Set distinctive page title with emoji for tab identification
-    document.title = "🔴 NASCOP Assistant";
+    document.title = "NASCOP Assistant";
     
     // Text-to-Speech functionality
     let speechSynthesis = window.speechSynthesis;
