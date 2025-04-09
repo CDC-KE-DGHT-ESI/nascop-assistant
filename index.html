@@ -4,75 +4,338 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NASCOP Virtual Assistant</title>
-    <!-- Add favicon links -->
-    <link rel="icon" type="image/png" href="images/ribbon.png">
-    <link rel="shortcut icon" type="image/png" href="images/ribbon.png">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f8fa;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header styles */
+        header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        /* Main content styles */
+        main {
+            padding: 2rem 0;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1a73e8;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #555;
+        }
+        
+        /* Chat interface styles */
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .chat-header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 1rem;
+            font-weight: bold;
+        }
+        
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f9f9f9;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            max-width: 70%;
+        }
+        
+        .user-message {
+            background-color: #e1f5fe;
+            margin-left: auto;
+        }
+        
+        .assistant-message {
+            background-color: #f1f1f1;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .chat-input button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .chat-input button:hover {
+            background-color: #0d62d0;
+        }
+        
+        /* Features section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #1a73e8;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            color: #1a73e8;
+        }
+        
+        /* Footer styles */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2rem 0;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul li a {
+            color: #ddd;
+            text-decoration: none;
+        }
+        
+        .footer-section ul li a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            margin-top: 2rem;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav {
+                margin-top: 1rem;
+            }
+            
+            .chat-messages {
+                height: 300px;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="header">
-        <button class="menu-toggle" id="menu-toggle">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
-        <h1>NASCOP Virtual Assistant</h1>
-        <!-- Speech toggle button will be added here by JavaScript -->
-    </div>
+    <header>
+        <div class="container header-content">
+            <div class="logo">NASCOP</div>
+            <nav class="nav">
+                <a href="#" style="color: white; text-decoration: none; margin-left: 1rem;">Home</a>
+                <a href="#" style="color: white; text-decoration: none; margin-left: 1rem;">About</a>
+                <a href="#" style="color: white; text-decoration: none; margin-left: 1rem;">Contact</a>
+            </nav>
+        </div>
+    </header>
     
-    <div class="app-container">
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <span>Conversations</span>
-                <button class="clear-history-btn" id="clear-history-btn" title="Clear All Conversations">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                    </svg>
-                </button>
-            </div>
-            <button class="new-chat-btn" id="new-chat-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                New Chat
-            </button>
-            <div class="conversation-list" id="conversation-list">
-                <!-- Conversation history will be added here -->
-            </div>
-        </div>
+    <main class="container">
+        <section class="hero">
+            <h1>NASCOP Virtual Assistant</h1>
+            <p>Your healthcare companion dedicated to providing reliable information and support for HIV/AIDS management and prevention programs.</p>
+            <h2> To get started, click on the chat icon, at the bottom right of the page</h2>
+        </section>
         
-        <div class="chat-container">
-            <div class="chat-messages" id="chat-messages">
-                <div class="message bot-message">
-                    <div>Hello! I am the NASCOP virtual Assistant. I can help answer questions about NASCOP guidelines and HIV treatment protocols. What would you like to know?</div>
-                    <div class="message-time" id="initial-time"></div>
-                </div>
+        <!-- Chat interface section removed - add your own chatbot implementation here -->
+        <script async
+        src="https://agent-8d4577d7737ec53f9b24-joien.ondigitalocean.app/static/chatbot/widget.js"
+        data-agent-id="a5e2a4cf-04de-11f0-bf8f-4e013e2ddde4"
+        data-chatbot-id="DUvi74yvoaYo8FsVGcfMkaug8L8IcObr"
+        data-name="NASCOP Virtual Assitant"
+        data-primary-color="#031B4E"
+        data-secondary-color="#E5E8ED"
+        data-button-background-color="#0061EB"
+        data-starting-message="Hello! How can I help you today?"
+        data-logo="/static/chatbot/icons/default-agent.svg">
+      </script>
+        
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>24/7 Support</h3>
+                <p>Get reliable health information and support at any time, anywhere.</p>
             </div>
-            <div class="typing-indicator" id="typing-indicator">Thinking...</div>
-            
-            <div class="examples">
-                <button class="example-button">Explain the three-test algorithm</button>
-                <button class="example-button">What is the standard package of care for PLHIV</button>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Resource Locator</h3>
+                <p>Find the nearest healthcare facilities and services in your area.</p>
             </div>
-            
-            <div class="chat-input-container">
-                <div class="chat-input">
-                    <input type="text" id="message-input" placeholder="Type your question here...">
-                    <button id="send-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Access</h3>
+                <p>Access our assistant from any device - desktop, tablet, or mobile phone.</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-section">
+                <h3>About NASCOP</h3>
+                <p>The National AIDS & STI Control Programme (NASCOP) was established to spearhead the Ministry of Health's interventions on HIV/AIDS and STIs in Kenya.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Resources</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li>Email: info@nascop.org</li>
+                    <li>Phone: +254 (0) 20 2729502</li>
+                    <li>Address: Kenyatta National Hospital Grounds</li>
+                </ul>
             </div>
         </div>
-    </div>
-
-    <script src="script.js"></script>
+        <div class="container copyright">
+            <p>&copy; 2025 NASCOP - National AIDS & STI Control Programme. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
